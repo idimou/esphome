@@ -1,0 +1,43 @@
+substitutions:
+  devicename: jesphome-ttn
+# needs 1 pulse counter for water flow + 2 analog sensors for pressure & ground moisture
+
+packages:
+  common: !include common/jesphome-core-lora32.yaml
+  wifi: !include common/jesphome-wifi-ota.yaml
+
+
+external_components:
+  - source: github://idimou/ESPHOME-TTN@main
+
+# Pins 16 & 17 are marked Tx, Rx on LOLIN D32 Pro. 
+# But you shouldn't use them as they are also used for serial over USB programming.
+# GPIO 0, 2, 13, 15 are free and not used for TFT socket etc.
+
+spi:  # for LoRa
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO12
+
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ESP IP Address
+      id: ip_address
+    ssid:
+      name: ESP Connected SSID
+      id: ssid
+
+font:
+  - file: "font/monofont.ttf"
+    id: font1
+    size: 20
+
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(font1), "Hello World!");

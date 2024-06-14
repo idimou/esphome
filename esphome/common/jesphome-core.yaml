@@ -1,0 +1,30 @@
+esphome:
+  name: $devicename
+
+esp32:
+  board: lolin_d32_pro
+  framework:
+    type: arduino
+
+
+logger:
+  logs:
+    mqtt.component: INFO
+    mqtt.client: INFO
+
+mqtt:
+  broker: 10.0.9.99
+  username: !secret mqtt_user
+  password: !secret mqtt_pass
+  discovery: true
+
+web_server:
+  port: 80
+
+#Enable Home Assistant API
+api:
+ # password: !secret ha_api_password
+
+# i2c:
+#   sda: 21  # todo: check these
+#   scl: 22

@@ -1,0 +1,54 @@
+i2c:
+  sda: 21
+  scl: 22
+
+
+
+display:
+  - platform: lcd_pcf8574
+    dimensions: 16x2
+    address: 0x27
+    id: LCD_display
+    lambda: |-
+      it.printf(0, 0, "%s@%s %2.0f", id(ip_address).state.c_str(),id(ssid).state.c_str(), id(wifi_signal_sensor).state);
+      it.printf(0, 1, "Temp=%2.0f Hum=%2.0f%", id(wifi_signal_sensor).state, id(wifi_signal_sensor).state);
+
+ # it.print(0, 0, "Hello World!");
+ # it.printf(0, 0, id(font1), "The data is: %s", id(ip_address).state.c_str());
+  # it.print("0");
+  # it.strftime("It is %H:%M on %d.%m.%Y", id(my_time).now());
+
+time:
+- platform: sntp
+  id: my_time
+
+sensor:
+  - platform: wifi_signal
+    id: wifi_signal_sensor
+    name: "WiFi Signal Sensor"
+    update_interval: 60s
+
+text_sensor:
+  - platform: wifi_info
+    ip_address: 
+      id: ip_address 
+      name: IP Address
+    ssid:
+      id: ssid
+      name: ESP Connected SSID
+    bssid:
+      name: ESP Connected BSSID
+    mac_address:
+      name: ESP Mac Wifi Address
+    scan_results:
+      name: ESP Latest Scan Results
+
+interval:
+  - interval: 1s
+    then:
+      - component.update: LCD_display
+
+font:
+  - file: "font/monofont.ttf"
+    id: font1
+    size: 12

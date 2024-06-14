@@ -1,0 +1,52 @@
+# The latest LOLIN 2.13" 122x250 epaper displays that we bought on 02.11.2022
+# seem to have issues:
+#   1. they continuously refresh
+#   2. they don't display correctly
+# They are DKE model with controller SSD1680
+# To fix it we need to create a pull request to https://github.com/soonuse/epd-library-arduino 
+# (the lib that esphome "waveshare_epaper" display platform is using) 
+# incorporating the DKE update of https://github.com/wemos/LOLIN_EPD_Library. Doable but needs time.
+
+font:
+  - file: "font/monofont.ttf"
+    id: opensans
+    size: 20
+
+spi:
+  clk_pin: 18
+  mosi_pin: 23
+  miso_pin: 19
+
+display:
+  - platform: waveshare_epaper
+    model: 2.13in-ttgo-dke 
+    id: LOLIN_epaper
+    cs_pin: 14
+    dc_pin: 27
+    # busy_pin: 0
+    reset_pin: 33
+    full_update_every: 10
+    update_interval: never
+    rotation: 90
+    lambda: |-
+      it.print(0, 0, id(opensans), "OOOOOOOOOOOOO");
+
+interval:
+  - interval: 5s
+    then:
+#      - display.page.show_next: LOLIN_epaper
+      - component.update: LOLIN_epaper
+
+# text_sensor:
+#   - platform: wifi_info
+#     ip_address:
+#       name: ESP IP Address
+#     ssid:
+#       name: ESP Connected SSID
+#     bssid:
+#       name: ESP Connected BSSID
+#     mac_address:
+#       name: ESP Mac Wifi Address
+#     scan_results:
+#       name: ESP Latest Scan Results
+
